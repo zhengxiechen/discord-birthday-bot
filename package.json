@@ -4,7 +4,8 @@
   "description": "A bot to assign roles each month and send message on birthdays",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node bot.js"
   },
   "author": "acez",
   "license": "ISC",

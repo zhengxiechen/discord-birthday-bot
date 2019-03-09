@@ -48,6 +48,13 @@ client.on('presenceUpdate', presenceUpdate => {
     })  
 });
 
+
+client.on('message', message => {
+    if (message.content === `${prefix}acez`) {
+        message.channel.send(`WHAT DID YOU SAY?!`);
+    }
+});
+
 // Some of the testing commands for future uses
 /*
 client.on('message', message => {
