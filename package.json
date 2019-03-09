@@ -1,0 +1,14 @@
+{
+  "name": "birthday-discord-bot",
+  "version": "1.0.0",
+  "description": "A bot to assign roles each month and send message on birthdays",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "acez",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.4.2"
+  }
+}
