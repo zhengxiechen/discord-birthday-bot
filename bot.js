@@ -1,9 +1,15 @@
 const Discord = require('discord.js');
 const fs = require('fs');
-const { prefix, token, channelID, roleID } = require('./config.json');
-const birthdayFile = './birthday.json';
-const birthday = require(birthdayFile);
+require('dotenv').config();
+
 const client = new Discord.Client();
+
+const prefix = process.env.PREFIX;
+const token = process.env.CLIENT_TOKEN;
+const channelID = process.env.CHANNEL_ID;
+const roleID = process.env.ROLE_ID;
+const birthdayFile = process.env.BIRTHDAY_DATA;
+const birthday = require(birthdayFile);
 
 client.on('ready', () => {
     console.log('Ready!');
