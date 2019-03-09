@@ -61,4 +61,4 @@ typings/
 .next
 
 # birthday data json file
-./birthday.json
+birthday_data/
