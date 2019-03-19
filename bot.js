@@ -1,5 +1,5 @@
-const MockApi = require('./__mocks__/mock_api.js');
-const BirthdayApi = require('./birthdayApi.js');
+const MockApi = require('./api/__mocks__/mock_api.js');
+const BirthdayApi = require('./api/birthdayApi.js');
 const Discord = require('discord.js');
 require('dotenv').config();
 
@@ -13,33 +13,52 @@ const environment = process.env.ENVIRONMENT;
 const client = new Discord.Client();
 const api = environment == "production" ? new BirthdayApi() : new MockApi()
 
-client.on('ready', () => {
-    console.log('Ready!');
+let birthdays = null;
+async function updateBirthdays (){
+    birthdays = await api.getBirthdays();
+    console.info(`Updated birthdays.`)
+}
+
+client.on('ready', async () => {
+    console.info('Bot Ready!');
+    await updateBirthdays();
 });
 
 client.on('presenceUpdate', presenceUpdate => {
+    if(!birthdays){
+        console.warn('Birthdays is empty when updating.');
+        return;
+    }
     var datetime = new Date();
     var birthdayChannel = presenceUpdate.guild.channels.get(channelId)
 
     presenceUpdate.guild.members.forEach((member) => {
-        var birthday = api.getBirthday(discordId)
+        var birthday = birthdays[discordId]
         if(birthday.month == datetime.getMonth()) {
             member.addRole(roleId);
             if(birthday.date == datetime.getDate() && !(!!+birthday.celebrated)) {
                 birthdayChannel.send(`Happy Birthday! ` + "<@" + member.id + ">");
-                api.updateBirthdayCelebration(true);
+                birthday.celebrated = true;
             }
         }
-        else if(member.hasRole(roleId)) {
+        else {
             member.removeRole(roleId);
-            api.updateBirthdayCelebration(false);
+            birthday.celebrated = false;
         }
     })  
 });
 
-client.on('message', message => {
-    if (message.content === `${prefix}acez`) {
-        message.channel.send(`WHAT DID YOU SAY?!`);
+client.on('message', async(message) => {
+    switch(message.content){
+        case `${prefix}acez`:
+            message.channel.send(`WHAT DID YOU SAY?!`);
+            break;
+        case `${prefix}update-birthdays`:
+            message.channel.send('Update Birthdays for bot');
+            await updateBirthdays();
+            break;
+        default:
+            break;
     }
 });
 

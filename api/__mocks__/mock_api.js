@@ -1,27 +1,22 @@
 class MockApi {
     constructor(){
-        this.birthdays = [
-            {
-                "id": "1",
+        this.birthdays = {
+            235088799074484224: {
                 "discord_id": "235088799074484224",
                 "user": "John Smith",
                 "month": "3",
                 "date": "19",
                 "celebrated": "0"
             }
-        ];
+        };
     }
 
-    getBirthdays() {
+    async getBirthdays() {
         return this.birthdays;
     }
 
-    updateBirthdayCelebration(discordId, hasCelebrated){
-        this.birthdays[0].celebrated = hasCelebrated ? "1" : "0";
-    }
-
-    getBirthday(discordId) {
-        return this.birthdays[0];
+    async getBirthdayByMonth(month) {
+        return this.birthdays;
     }
 }
 
