@@ -11,10 +11,18 @@ const roleId = process.env.ROLE_ID;
 const environment = process.env.ENVIRONMENT;
 
 const client = new Discord.Client();
-const api = environment == "production" ? new BirthdayApi() : new MockApi()
+const api = environment == "PRODUCTION" ? new BirthdayApi() : new MockApi()
 
 client.on('ready', () => {
     console.log('Ready!');
+    var getBirthdaysPromise = api.getBirthdays();
+    getBirthdaysPromise.then(function(result) {
+        var birthdays = result;
+        console.log(birthdays)
+    }, function(err) {
+        console.log(err);
+    })
+    // console.log(api.getBirthdays());
 });
 
 client.on('presenceUpdate', presenceUpdate => {
@@ -22,17 +30,22 @@ client.on('presenceUpdate', presenceUpdate => {
     var birthdayChannel = presenceUpdate.guild.channels.get(channelId)
 
     presenceUpdate.guild.members.forEach((member) => {
-        var birthday = api.getBirthday(discordId)
-        if(birthday.month == datetime.getMonth()) {
-            member.addRole(roleId);
-            if(birthday.date == datetime.getDate() && !(!!+birthday.celebrated)) {
-                birthdayChannel.send(`Happy Birthday! ` + "<@" + member.id + ">");
-                api.updateBirthdayCelebration(true);
+        var birthday = api.getBirthday(member.id);
+        console.log(birthday);
+        if(birthday) {  // member's birthday info is on file
+            console.log(birthday);
+            if(birthday.month == datetime.getMonth()) {
+                member.addRole(roleId);
+                if(birthday.date == datetime.getDate() && !(!!+birthday.celebrated)) {
+                    console.log("MESSAGE SENT");
+                    // birthdayChannel.send(`Happy Birthday! ` + "<@" + member.id + ">");
+                    api.updateBirthdayCelebration(member.id, true);
+                }
             }
-        }
-        else if(member.hasRole(roleId)) {
-            member.removeRole(roleId);
-            api.updateBirthdayCelebration(false);
+            else {
+                member.removeRole(roleId);
+                api.updateBirthdayCelebration(member.id, false);
+            }
         }
     })  
 });

@@ -1,7 +1,9 @@
 var sheetsu = require('sheetsu-node');
+require('dotenv').config();
+
 const ApiAddress = process.env.API_ADDRESS;
-const ApiKey = process.env.API_KEY;
-const ApiSecret = process.env.API_SECRET;
+// const ApiKey = process.env.API_KEY;
+// const ApiSecret = process.env.API_SECRET;
 
 class BirthdayApi {
     constructor (){
@@ -15,12 +17,24 @@ class BirthdayApi {
     }
 
     getBirthdays() {
+        return new Promise(function(resolve, reject) {
+            // Do async job
+            this.client.read().then(function(err, data){
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(JSON.parse(data));
+                }
+            })
+        })
+        /*
         this.client.read().then(function(data){
             return JSON.parse(data);
         }, function(err) {
             console.log(err);
             return null;
         });
+        */
     }
 
     updateBirthdayCelebration(discordId, hasCelebrated){
