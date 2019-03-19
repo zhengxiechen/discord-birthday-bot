@@ -1,4 +1,5 @@
 var sheetsu = require('sheetsu-node');
+require('dotenv').config();
 const ApiAddress = process.env.API_ADDRESS;
 const ApiKey = process.env.API_KEY;
 const ApiSecret = process.env.API_SECRET;
