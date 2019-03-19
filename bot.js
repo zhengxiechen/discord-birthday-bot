@@ -6,8 +6,8 @@ require('dotenv').config();
 // Environment Variables
 const prefix = process.env.PREFIX;
 const token = process.env.CLIENT_TOKEN;
-const channelID = process.env.CHANNEL_ID;
-const roleID = process.env.ROLE_ID;
+const channelId = process.env.CHANNEL_ID;
+const roleId = process.env.ROLE_ID;
 const environment = process.env.ENVIRONMENT;
 
 const client = new Discord.Client();
@@ -18,22 +18,21 @@ client.on('ready', () => {
 });
 
 client.on('presenceUpdate', presenceUpdate => {
-    var datetime = new Date();  // return month and date
-    var birthdayChannel = presenceUpdate.guild.channels.get(channelID) // get #birthday-only channel
-
-    api.getBirthdays();
+    var datetime = new Date();
+    var birthdayChannel = presenceUpdate.guild.channels.get(channelId)
 
     presenceUpdate.guild.members.forEach((member) => {
-        if(api.isBirthdayMonth(member)) {
-            member.addRole(roleID);
-            if(api.needsCelebration(member)) {
+        var birthday = api.getBirthday(discordId)
+        if(birthday.month == datetime.getMonth()) {
+            member.addRole(roleId);
+            if(birthday.date == datetime.getDate() && !(!!+birthday.celebrated)) {
                 birthdayChannel.send(`Happy Birthday! ` + "<@" + member.id + ">");
-                api.celebrate();
+                api.updateBirthdayCelebration(true);
             }
         }
-        else if(member.hasRole(roleID)) {
-            member.removeRole(roleID);
-            api.cancelCelebration();
+        else if(member.hasRole(roleId)) {
+            member.removeRole(roleId);
+            api.updateBirthdayCelebration(false);
         }
     })  
 });
