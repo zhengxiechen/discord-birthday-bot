@@ -4,8 +4,6 @@ const ApiKey = process.env.API_KEY;
 const ApiSecret = process.env.API_SECRET;
 
 class BirthdayApi {
-    client;
-
     constructor (){
         var config = {
             address: ApiAddress,
@@ -46,4 +44,4 @@ class BirthdayApi {
     }
 }
 
-export default BirthdayApi;
+module.exports = BirthdayApi;

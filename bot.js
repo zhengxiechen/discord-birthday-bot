@@ -1,5 +1,5 @@
-import MockApi from './__mocks__/mock_api';
-import BirthdayApi from './birthdayApi';
+const MockApi = require('./__mocks__/mock_api.js');
+const BirthdayApi = require('./birthdayApi.js');
 const Discord = require('discord.js');
 require('dotenv').config();
 

@@ -1,19 +1,13 @@
-import fs from 'fs';
+const fs = require('fs');
 const birthdayFile = require('./birthdays.json');
 
 
 class MockApi {
-    birthdays = null;
-
     getBirthdays() {
-        if(this.birthdays) {
-            return this.birthdays;
-        }
         fs.readFile(birthdayFile, (err, data) => {  
             if (err) throw err;
-            this.birthdays = JSON.parse(data);
+            return JSON.parse(data);
         });
-        return this.birthdays;
     }
 
     updateBirthdayCelebration(discordId, hasCelebrated){
@@ -28,4 +22,4 @@ class MockApi {
     }
 }
 
-export default MockApi;
+module.exports = MockApi;
