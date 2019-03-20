@@ -60,5 +60,8 @@ typings/
 # next.js build output
 .next
 
+# DS_Store file
+.DS_Store
+
 # birthday data json file
 birthday_data/
