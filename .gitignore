@@ -62,6 +62,3 @@ typings/
 
 # DS_Store file
 .DS_Store
-
-# birthday data json file
-birthday_data/
