@@ -33,17 +33,19 @@ client.on('presenceUpdate', presenceUpdate => {
     var birthdayChannel = presenceUpdate.guild.channels.get(channelId)
 
     presenceUpdate.guild.members.forEach((member) => {
-        var birthday = birthdays[discordId]
-        if(birthday.month == datetime.getMonth()) {
-            member.addRole(roleId);
-            if(birthday.date == datetime.getDate() && !(!!+birthday.celebrated)) {
-                birthdayChannel.send(`Happy Birthday! ` + "<@" + member.id + ">");
-                birthday.celebrated = true;
+        var birthday = birthdays[`${member.id}`]
+        if(birthday) {
+            if(birthday.month == datetime.getMonth()) {
+                member.addRole(roleId);
+                if(birthday.date == datetime.getDate() && !(!!+birthday.celebrated)) {
+                    birthdayChannel.send(`Happy Birthday! ` + "<@" + member.id + ">");
+                    birthday.celebrated = true;
+                }
             }
-        }
-        else {
-            member.removeRole(roleId);
-            birthday.celebrated = false;
+            else {
+                member.removeRole(roleId);
+                birthday.celebrated = false;
+            }
         }
     })  
 });

@@ -2,7 +2,6 @@ class MockApi {
     constructor(){
         this.birthdays = [
             {
-                "id": "1",
                 "discord_id": "280187651221487617",
                 "user": "AceZ",
                 "month": "2",
