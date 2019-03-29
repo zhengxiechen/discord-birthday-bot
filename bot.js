@@ -30,14 +30,16 @@ client.on('presenceUpdate', presenceUpdate => {
         return;
     }
     var datetime = new Date();
+    var offset = -300; //Timezone offsetfor EST in minutes
+    var estDateTime = new Date(datetime.getTime() + offset*60*1000);
     var birthdayChannel = presenceUpdate.guild.channels.get(channelId)
 
     presenceUpdate.guild.members.forEach((member) => {
         var birthday = birthdays[`${member.id}`]
         if(birthday) {
-            if(birthday.month == datetime.getMonth()) {
+            if(birthday.month == estDateTime.getMonth()) {
                 member.addRole(roleId);
-                if(birthday.date == datetime.getDate() && !(!!+birthday.celebrated)) {
+                if(birthday.date == estDateTime.getDate() && !(!!+birthday.celebrated)) {
                     birthdayChannel.send(`Happy Birthday! ` + "<@" + member.id + ">");
                     birthday.celebrated = true;
                 }
