@@ -18,6 +18,10 @@ let monthBirthdays = null;
 let monthCeleMessage = "";
 let monthCelebrated = false;
 
+let datetime = null;
+let offset = -3000; //Timezone offsetfor EST in minutes
+let estDateTime = null;
+
 async function updateBirthdays (){
     birthdays = await api.getBirthdays();
     console.info(`Updated birthdays.`)
@@ -58,8 +62,14 @@ async function sendCelebrationByMonth(guild, month, birthdayChannel) {
     birthdayChannel.send(monthCeleMessage);
 }
 
+function getDate() {
+    datetime = new Date();
+    estDateTime = new Date(datetime.getTime() + offset*60*1000);
+}
+
 client.on('ready', async () => {
     console.info('Bot Ready!');
+    setInterval(getDate, 1000*3600);
     await updateBirthdays();
 });
 
@@ -68,9 +78,6 @@ client.on('presenceUpdate', async(presenceUpdate) => {
         console.warn('Birthdays is empty when updating.');
         return;
     }
-    var datetime = new Date();
-    var offset = -300; //Timezone offsetfor EST in minutes
-    var estDateTime = new Date(datetime.getTime() + offset*60*1000);
     var birthdayChannel = presenceUpdate.guild.channels.get(channelId);
 
     if(estDateTime.getDate() == 1 && !monthCelebrated) {
@@ -122,9 +129,8 @@ client.on('message', async(message) => {
             })
             message.channel.send(rolesID);
             break;
-        case `${prefix}birthdays`:
-            //await sendCelebrationByMonth(message.guild, 5, message.channel);
-            await sendCelebrationByMonth(message.guild, 5, message.guild.channels.get(channelId));
+        case `${prefix}remind-birthdays`:
+            await sendCelebrationByMonth(message.guild, estDateTime.getMonth(), message.guild.channels.get(channelId));
             break;
         case `${prefix}update-birthdays`:
             message.channel.send('Update Birthdays for bot');
