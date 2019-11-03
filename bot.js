@@ -19,7 +19,7 @@ let monthCeleMessage = "";
 let monthCelebrated = false;
 
 let datetime = null;
-let offset = -3000; //Timezone offsetfor EST in minutes
+let offset = -0; //Timezone offset for EST in minutes
 let estDateTime = null;
 
 async function updateBirthdays (){
@@ -62,13 +62,29 @@ async function sendCelebrationByMonth(guild, month, birthdayChannel) {
     birthdayChannel.send(monthCeleMessage);
 }
 
-function getDate() {
+async function sendCelebration(guild) {
+    const birthdayChannel = guild.channels.get(channelId);
+    guild.members.forEach((member) => {
+        var birthday = birthdays[`${member.id}`];
+        if(birthday) {
+            if(birthday.month == estDateTime.getMonth()) {
+                if(birthday.date == estDateTime.getDate() && !(!!+birthday.celebrated)) {
+                    birthdayChannel.send(`Happy Birthday! ` + "<@" + member.id + ">");
+                    birthday.celebrated = true;
+                }
+            }
+        }
+    })
+}
+
+async function getDate() {
     datetime = new Date();
     estDateTime = new Date(datetime.getTime() + offset*60*1000);
 }
 
 client.on('ready', async () => {
     console.info('Bot Ready!');
+    await getDate();
     setInterval(getDate, 1000*3600);
     await updateBirthdays();
 });
@@ -90,17 +106,7 @@ client.on('presenceUpdate', async(presenceUpdate) => {
         monthCelebrated = false;
     }
 
-    presenceUpdate.guild.members.forEach((member) => {
-        var birthday = birthdays[`${member.id}`];
-        if(birthday) {
-            if(birthday.month == estDateTime.getMonth()) {
-                if(birthday.date == estDateTime.getDate() && !(!!+birthday.celebrated)) {
-                    birthdayChannel.send(`Happy Birthday! ` + "<@" + member.id + ">");
-                    birthday.celebrated = true;
-                }
-            }
-        }
-    })
+    await sendCelebration(presenceUpdate.guild);
 });
 
 client.on('message', async(message) => {
@@ -128,6 +134,9 @@ client.on('message', async(message) => {
                 rolesID += role.name + ':  ' + role.id + '\n';
             })
             message.channel.send(rolesID);
+            break;
+        case `${prefix}send-celebration`:
+            await sendCelebration(message.guild);
             break;
         case `${prefix}remind-birthdays`:
             await sendCelebrationByMonth(message.guild, estDateTime.getMonth(), message.guild.channels.get(channelId));
