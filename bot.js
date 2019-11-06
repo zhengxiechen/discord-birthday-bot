@@ -19,7 +19,7 @@ let monthCeleMessage = "";
 let monthCelebrated = false;
 
 let datetime = null;
-let offset = -0; //Timezone offset for EST in minutes
+let offset = -300; //Timezone offset for EST in minutes
 let estDateTime = null;
 
 async function updateBirthdays (){
