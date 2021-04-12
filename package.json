@@ -10,7 +10,7 @@
   "author": "acez",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^11.4.2",
+    "discord.js": "^11.6.4",
     "dotenv": "^6.2.0",
     "sheetsu-node": "0.0.7"
   }
